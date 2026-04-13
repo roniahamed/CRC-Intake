@@ -2,12 +2,7 @@
 
 CheckIn is a patient flow management system that simplifies intake, controls queues by role, tracks progress in real time, and keeps stakeholders updated through timely notifications.
 
-## Live Demo
-[Live API](https://your-live-link.com)
 
-## API Documentation
-- **Swagger UI**: [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/) (Local, route not currently configured in project URLs)
-- **Redoc**: [http://127.0.0.1:8000/api/redoc/](http://127.0.0.1:8000/api/redoc/) (Local, route not currently configured in project URLs)
 
 ## Features
 - JWT-based authentication using DRF Simple JWT with role claims embedded in tokens.
@@ -32,7 +27,7 @@ CheckIn is a patient flow management system that simplifies intake, controls que
 
 - Django 5.2.6
 - Django REST Framework 3.16.1
-- Database: SQLite by default, configurable via environment variables
+- Database: Postgresql, configurable via environment variables
 - Authentication: Custom JWT authentication class with role-aware access rules
 - Real-time communication: Django Channels with Redis channel layer
 - Async jobs: Celery worker and optional Celery Beat
@@ -47,7 +42,7 @@ CheckIn is a patient flow management system that simplifies intake, controls que
 ## Installation and Setup
 ```bash
 # 1) Clone the repository
-git clone <your-repository-url>
+git clone git@github.com:roniahamed/CRC-Intake.git
 cd CRC-Intake
 
 # 2) Create and activate virtual environment
@@ -162,10 +157,9 @@ CRC-Intake/
 └── .env.example
 ```
 
-## Running Tests and Migrations
+## Running Migrations
 ```bash
-# Run tests
-python manage.py test
+
 
 # Create migrations
 python manage.py makemigrations
@@ -189,11 +183,6 @@ This project is licensed under a custom license.
 - Commercial use, resale, and redistribution are prohibited without prior written permission.
 - See the LICENSE file in the repository root for the full license text.
 
-## Contributing
-1. Keep pull requests scoped to one functional change.
-2. Include related migration files for model updates.
-3. Update documentation when API contracts or behavior change.
-4. Ensure changes remain compatible with DRF permission and authentication rules.
 
 ## Contact
 - **GitHub**: [@roniahamed](https://github.com/roniahamed)
