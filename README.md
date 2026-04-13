@@ -1,191 +1,204 @@
-# CheckIn - Patient Management System
+# Project Title
 
-A comprehensive Django-based patient management and queue system for healthcare facilities with real-time updates and role-based access control.
+CheckIn is a patient flow management system that simplifies intake, controls queues by role, tracks progress in real time, and keeps stakeholders updated through timely notifications.
 
-## 🚀 Features
+## Live Demo
+[Live API](https://your-live-link.com)
 
-- **Role-Based Authentication**: JWT-based authentication with three distinct roles (Form Manager, Doctor, Queue Manager)
-- **Patient Management**: Complete patient registration with comprehensive data collection
-- **Real-Time Queue**: Live queue updates via WebSocket for seamless patient flow
-- **Email Notifications**: Automated email alerts on patient check-in
-- **Image Upload**: Patient photo capture and storage
-- **RESTful API**: Well-documented API endpoints for easy integration
+## API Documentation
+- **Swagger UI**: [http://127.0.0.1:8000/api/docs/](http://127.0.0.1:8000/api/docs/) (Local, route not currently configured in project URLs)
+- **Redoc**: [http://127.0.0.1:8000/api/redoc/](http://127.0.0.1:8000/api/redoc/) (Local, route not currently configured in project URLs)
 
-## 📚 Documentation
+## Features
+- JWT-based authentication using DRF Simple JWT with role claims embedded in tokens.
+- Custom DRF authentication backend for token-based API access.
+- Role-based permissions for Form, Doctor, and Queue workflows.
+- Patient intake endpoint with strong serializer-level validation rules.
+- Queue lifecycle management with transactional updates and wait-time tracking.
+- Real-time queue event broadcasting over WebSocket with Django Channels.
+- Asynchronous email notifications for new check-ins using Celery and Redis.
+- Admin-managed access tokens and recipient configuration for operational control.
+- Image upload support for patient profiles with file type and size validation.
 
-Comprehensive documentation is available in the [`docs/`](docs/) folder:
+## Tech Stack
+[![Django](https://img.shields.io/badge/Django-5.2.6-092E20?style=flat&logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![Django REST Framework](https://img.shields.io/badge/Django%20REST%20Framework-3.16.1-000000?style=flat&logo=django&logoColor=white)](https://www.django-rest-framework.org/)
+[![Simple JWT](https://img.shields.io/badge/SimpleJWT-5.5.1-4B8BBE?style=flat)](https://django-rest-framework-simplejwt.readthedocs.io/)
+[![Django Channels](https://img.shields.io/badge/Channels-4.3.1-0C4B33?style=flat)](https://channels.readthedocs.io/)
+[![Celery](https://img.shields.io/badge/Celery-5.5.3-37814A?style=flat&logo=celery&logoColor=white)](https://docs.celeryq.dev/)
+[![Redis](https://img.shields.io/badge/Redis-6.x-DC382D?style=flat&logo=redis&logoColor=white)](https://redis.io/)
+[![SQLite](https://img.shields.io/badge/SQLite-Default-003B57?style=flat&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Django Unfold](https://img.shields.io/badge/Django%20Unfold-0.67.0-1F2937?style=flat)](https://github.com/unfoldadmin/django-unfold)
 
-- **[Getting Started](docs/getting-started.md)** - Installation and setup guide
-- **[Authentication](docs/authentication.md)** - Authentication flow and JWT usage
-- **[API Endpoints](docs/api-endpoints.md)** - Complete API reference with request/response examples
-- **[WebSocket Events](docs/websocket.md)** - Real-time event documentation
-- **[Data Models](docs/data-models.md)** - Database schema and model details
-- **[Error Handling](docs/error-handling.md)** - Error codes and troubleshooting
-- **[Examples](docs/examples.md)** - Code examples in JavaScript, Python, React
-- **[Quick Reference](docs/quick-reference.md)** - Cheat sheet for common tasks
-- **[Production Deployment](docs/deployment.md)** - Nginx, Gunicorn, systemd setup
+- Django 5.2.6
+- Django REST Framework 3.16.1
+- Database: SQLite by default, configurable via environment variables
+- Authentication: Custom JWT authentication class with role-aware access rules
+- Real-time communication: Django Channels with Redis channel layer
+- Async jobs: Celery worker and optional Celery Beat
 
-## 🛠️ Tech Stack
+## Prerequisites
+- Python 3.12 or higher
+- pip
+- Virtual environment tool (venv)
+- Redis server (required for Celery and Channels)
+- SQLite for local development (or PostgreSQL/MySQL in production)
 
-- **Backend**: Django 5.2+ with Django REST Framework
-- **Authentication**: JWT (Simple JWT)
-- **Real-time**: Django Channels + Redis
-- **Task Queue**: Celery
-- **Database**: SQLite (dev) / PostgreSQL (prod)
-- **Admin**: Django Unfold
-
-## 🚦 Quick Start
-
-### 1. Install Dependencies
-
+## Installation and Setup
 ```bash
-# Create virtual environment
+# 1) Clone the repository
+git clone <your-repository-url>
+cd CRC-Intake
+
+# 2) Create and activate virtual environment
 python -m venv env
-source env/bin/activate  # On Windows: env\Scripts\activate
+source env/bin/activate
+# On Windows use: env\Scripts\activate
 
-# Install packages
+# 3) Install dependencies
 pip install -r requirements.txt
-```
 
-### 2. Configure Environment
+# 4) Create environment file
+cp .env.example .env
 
-Create a `.env` file:
-
-```env
-DEBUG=True
-SECRET_KEY=your-secret-key-here
-ALLOWED_HOSTS=127.0.0.1,localhost
-CELERY_BROKER_URL=redis://localhost:6379/0
-```
-
-### 3. Run Migrations
-
-```bash
+# 5) Apply migrations
 python manage.py migrate
+
+# 6) Create superuser
 python manage.py createsuperuser
 ```
 
-### 4. Start Services
+## Environment Variables
+| Variable | Description |
+|---|---|
+| DEBUG | Enable or disable Django debug mode. |
+| SECRET_KEY | Django cryptographic secret key. |
+| ALLOWED_HOSTS | Comma-separated list of allowed domains/hosts. |
+| SITE_URL | Site URL used in environment-level settings. |
+| SITE_DOMAIN | Base domain used for absolute links (for example media URLs in emails). |
+| DB_ENGINE | Django database backend engine (default: sqlite3 backend). |
+| DB_NAME | Database name or sqlite file path. |
+| DB_USER | Database username (non-sqlite databases). |
+| DB_PASSWORD | Database password (non-sqlite databases). |
+| DB_HOST | Database host (non-sqlite databases). |
+| DB_PORT | Database port (non-sqlite databases). |
+| EMAIL_BACKEND | Django email backend class path. |
+| EMAIL_HOST | SMTP host for outgoing mail. |
+| EMAIL_PORT | SMTP port. |
+| EMAIL_USE_TLS | Enable TLS for email transport. |
+| EMAIL_HOST_USER | SMTP account username/email. |
+| EMAIL_HOST_PASSWORD | SMTP account password or app password. |
+| DEFAULT_FROM_EMAIL | Sender email used by the application. |
+| CELERY_BROKER_URL | Celery broker URL (Redis). |
+| CELERY_RESULT_BACKEND | Celery result backend URL. |
+| CELERY_TIMEZONE | Timezone for Celery processes. |
+| MEDIA_URL | URL prefix for media files. |
+| MEDIA_ROOT | Filesystem path for media storage. |
+| CSRF_TRUSTED_ORIGINS | Comma-separated trusted origins for CSRF. |
+| SECURE_SSL_REDIRECT | Force HTTPS redirects in production. |
+| SESSION_COOKIE_SECURE | Send session cookies over HTTPS only. |
+| CSRF_COOKIE_SECURE | Send CSRF cookie over HTTPS only. |
+
+## Running the Project
+```bash
+# Local development
+python manage.py runserver
+```
 
 ```bash
-# Terminal 1: Redis
-redis-server
-
-# Terminal 2: Celery
-celery -A CheckIn worker -l info
-
-# Terminal 3: ASGI Server (Daphne)
+# ASGI server (recommended when testing WebSockets)
 daphne -b 0.0.0.0 -p 8000 CheckIn.asgi:application
 ```
 
-### 5. Access the System
-
-- **API**: http://localhost:8000/api/
-- **Admin Panel**: http://localhost:8000/admin/
-- **WebSocket**: ws://localhost:8000/ws/queue/
-
-## 📋 API Overview
-
-### Authentication
+```bash
+# Celery worker
+celery -A CheckIn worker -l info
+```
 
 ```bash
-# Login
-POST /api/login/
-{
-  "token": "12345678",
-  "password": "your-password"
-}
+# Celery beat (optional)
+celery -A CheckIn beat -l info
 ```
-
-### Patient Management (Form Manager)
 
 ```bash
-# Register patient
-POST /api/patients/
-# Requires: Form Manager role
-# Accepts: multipart/form-data with patient details + optional image
+# Docker (if you add Docker support files)
+docker compose up --build -d
 ```
-
-### Doctor Management
 
 ```bash
-# Call next patient (completes immediately)
-POST /api/doctors/
-{
-  "action": "call_next"
-}
+# Production example
+gunicorn CheckIn.asgi:application \
+  --worker-class uvicorn.workers.UvicornWorker \
+  --bind 0.0.0.0:8000 \
+  --workers 4
 ```
 
-### Queue Status
+## Project Structure
+```text
+CRC-Intake/
+├── CheckIn/
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   ├── celery.py
+│   └── wsgi.py
+├── management/
+│   ├── authentication.py
+│   ├── permissions.py
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── tasks.py
+│   ├── consumers.py
+│   ├── routing.py
+│   └── management/commands/cleanup_sitesettings.py
+├── templates/
+│   └── emails/patient_details.html
+├── docs/
+├── postman collection/
+├── manage.py
+├── requirements.txt
+└── .env.example
+```
 
+## Running Tests and Migrations
 ```bash
-# Get current queue
-GET /api/queue/
-```
-
-## 🔐 Access Roles
-
-| Role | Access Token Value | Permissions |
-|------|-------------------|-------------|
-| Form Manager | `form` | Register patients |
-| Doctor | `doctor` | Manage consultations |
-| Queue Manager | `queue` | View queue |
-
-Create access tokens in the Django admin panel at `/admin/`.
-
-## 📡 WebSocket Events
-
-Connect to `ws://localhost:8000/ws/queue/` to receive real-time updates:
-
-- **PATIENT_ADDED** - New patient checked in
-
-- **PATIENT_COMPLETED** - Consultation finished
-
-## 🔧 Development
-
-### Project Structure
-
-```
-CheckIn/
-├── CheckIn/          # Project settings
-├── management/       # Main app (models, views, serializers)
-├── docs/            # Documentation
-├── media/           # Uploaded files
-├── templates/       # Email templates
-└── requirements.txt # Dependencies
-```
-
-### Running Tests
-
-```bash
+# Run tests
 python manage.py test
+
+# Create migrations
+python manage.py makemigrations
+
+# Apply migrations
+python manage.py migrate
 ```
 
-## 📝 Environment Variables
+## Deployment
+- Render or Railway: deploy the Django service, attach Redis, and configure all environment variables.
+- AWS: run with Gunicorn/Uvicorn behind Nginx, use managed Redis (ElastiCache), and configure secure secrets.
+- Docker: create Dockerfile and docker-compose for web, redis, celery worker, and celery beat services.
+- VPS: use systemd units for Gunicorn, Celery, and Celery Beat with reverse proxy and TLS.
 
-See [Getting Started](docs/getting-started.md) for a complete list of environment variables.
 
-## 🤝 Contributing
+## Custom License
+This project is licensed under a custom license.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- Copyright (c) 2026 Roni Ahamed.
+- Permission is granted for view-only and evaluation purposes.
+- Commercial use, resale, and redistribution are prohibited without prior written permission.
+- See the LICENSE file in the repository root for the full license text.
 
-## 📄 License
+## Contributing
+1. Keep pull requests scoped to one functional change.
+2. Include related migration files for model updates.
+3. Update documentation when API contracts or behavior change.
+4. Ensure changes remain compatible with DRF permission and authentication rules.
 
-This is a client project. All rights reserved by the client.
+## Contact
+- **GitHub**: [@roniahamed](https://github.com/roniahamed)
+- **Portfolio**: [roniahamed.com](https://www.roniahamed.com)
+- **LinkedIn**: [Roni Ahamed](https://www.linkedin.com/in/roniahamed/)
+- **Email**: [mdroniahamed56@gmail.com](mailto:mdroniahamed56@gmail.com)
 
-## �‍💻 Developer
-
-**Roni Ahamed**  
-Backend Developer
-
-## �📞 Support
-
-For detailed API documentation and examples, please refer to the [documentation](docs/) folder.
-
----
-
-**Last Updated**: October 28, 2025
+If you find this project useful, please consider starring the repository on GitHub.
